@@ -19,7 +19,7 @@ def debug(level, msg, save_to_file=True):
     print(cmsg)
     if save_to_file:
         with open(logfilename, 'a') as fl:
-            fl.write(cmsg)
+            fl.write(cmsg + '\n')
 
 
 def send_mail(to, subj, body):
@@ -62,12 +62,23 @@ def main_loop():
     channel = 17
     GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+    current_state = GPIO.input(channel)
+
     while (True):
-        if GPIO.input(channel):
-            debug(3, 'HIGH')
+        # wait for state change
+        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=1000)
+        # get the current state
+        cstate = GPIO.input(channel)
+        if cstate == current_state:
+            debug(3, 'nothing changed')
+            continue
+        if cstate:
+            # high
+            debug(3, 'high')
         else:
-            debug(3, 'Input was LOW')
-        time.sleep(0.1)
+            # low
+            debug(3, 'low')
+        current_state = cstate
 
 
 def main(argv):

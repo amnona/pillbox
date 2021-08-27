@@ -47,7 +47,7 @@ def send_mail(to, subj, body):
         smtp_server.close()
         debug(3, "Email sent successfully!")
     except Exception as ex:
-        debug(3, "Something went wrong….", ex)
+        debug(3, "Something went wrong: %s" % ex)
 
 
 def main_loop():

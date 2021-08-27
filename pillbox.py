@@ -73,6 +73,8 @@ def main_loop():
 
     current_state = GPIO.input(channel)
 
+    debug(7, 'pillbox started')
+
     while (True):
         # wait for state change
         GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)

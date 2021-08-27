@@ -77,7 +77,7 @@ def main_loop():
         # wait for state change
         GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
 
-        sleep_interval = 60000
+        sleep_interval = 1000
         cnow = datetime.now()
 
         # get the current state

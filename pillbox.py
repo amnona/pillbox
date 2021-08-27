@@ -56,6 +56,14 @@ def main_loop():
 
     debug_level = 3
     logfilename = 'pillbox-log.txt'
+    pill_start_hour = 7
+    pill_remind_hour = 10
+    last_pill_time = datetime.now()
+    pill_taken = True
+    reminder_sent = False
+    reminder_time = datetime.now()
+    # time between pill reminders, in seconds
+    reminder_interval = 60 * 60
 
     # initialize the gpio inputs
     GPIO.setmode(GPIO.BCM)
@@ -66,18 +74,44 @@ def main_loop():
 
     while (True):
         # wait for state change
-        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=1000)
+        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=60000)
+
+        cnow = datetime.now()
+
         # get the current state
         cstate = GPIO.input(channel)
         if cstate == current_state:
-            debug(3, 'nothing changed')
+            # nothing changed - it was a timeout
+            if last_pill_time.day != cnow().day:
+                # if a new day, we need to take a new pill
+                pill_taken = False
+                reminder_sent = False
+                debug(3, 'new day, pill_taken reset')
+            if not pill_taken:
+                if cnow.hour > pill_remind_hour:
+                    if (cnow - reminder_time).seconds > reminder_interval:
+                        reminder_sent = False
+                    if not reminder_sent:
+                        debug(7, 'oh no, still didnt take a pill, sending a reminder')
+                        send_mail(to=['amnonim@gmail.com', 'strudelit@gmail.com'], subj='Did you forget your medicine?', body='You need to take your medicine!!!!\nAmnon loves you moremoremoremoremore\n')
+                        reminder_sent = True
+                        reminder_time = cnow
+                    else:
+                        debug(3, 'still need to take pill but reminder already sent')
             continue
+
         if cstate:
-            # high
-            debug(3, 'high')
+            # box is opened - we are taking a pill
+            debug(6, 'box opened (high)')
+            pill_taken = True
+            last_pill_time = cnow
+            reminder_sent = False
         else:
             # low
-            debug(3, 'low')
+            debug(6, 'box closed')
+        # we need to wait a few ms to prevent edge events
+        time.sleep(0.3)
+
         current_state = cstate
 
 

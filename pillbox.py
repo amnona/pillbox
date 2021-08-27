@@ -82,7 +82,7 @@ def main_loop():
         cstate = GPIO.input(channel)
         if cstate == current_state:
             # nothing changed - it was a timeout
-            if last_pill_time.day != cnow().day:
+            if last_pill_time.day != cnow.day:
                 # if a new day, we need to take a new pill
                 pill_taken = False
                 reminder_sent = False

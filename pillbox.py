@@ -64,6 +64,7 @@ def main_loop():
     reminder_time = datetime.now()
     # time between pill reminders, in seconds
     reminder_interval = 60 * 60
+    sleep_interval = 1000
 
     # initialize the gpio inputs
     GPIO.setmode(GPIO.BCM)
@@ -74,8 +75,9 @@ def main_loop():
 
     while (True):
         # wait for state change
-        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=60000)
+        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
 
+        sleep_interval = 60000
         cnow = datetime.now()
 
         # get the current state
@@ -111,6 +113,7 @@ def main_loop():
             debug(6, 'box closed')
         # we need to wait a few ms to prevent edge events
         time.sleep(0.3)
+        sleep_interval = 1000
 
         current_state = cstate
 

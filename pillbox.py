@@ -79,7 +79,7 @@ def main_loop():
         # wait for state change
         GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
 
-        sleep_interval = 1000
+        sleep_interval = 60000
         cnow = datetime.now()
 
         # get the current state
@@ -95,13 +95,13 @@ def main_loop():
                 if cnow.hour > pill_remind_hour:
                     if (cnow - reminder_time).seconds > reminder_interval:
                         reminder_sent = False
-                    if not reminder_sent:
-                        debug(7, 'oh no, still didnt take a pill, sending a reminder')
-                        send_mail(to=['amnonim@gmail.com', 'strudelit@gmail.com'], subj='Did you forget your medicine?', body='You need to take your medicine!!!!\nAmnon loves you moremoremoremoremore\n')
-                        reminder_sent = True
-                        reminder_time = cnow
-                    else:
-                        debug(3, 'still need to take pill but reminder already sent')
+                        if not reminder_sent:
+                            debug(7, 'oh no, still didnt take a pill, sending a reminder')
+                            send_mail(to=['amnonim@gmail.com', 'strudelit@gmail.com'], subj='Did you forget your medicine?', body='You need to take your medicine!!!!\nAmnon loves you moremoremoremoremore\n')
+                            reminder_sent = True
+                            reminder_time = cnow
+                        else:
+                            debug(3, 'still need to take pill but reminder already sent')
             continue
 
         if cstate:

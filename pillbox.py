@@ -69,7 +69,13 @@ def main_loop():
     # initialize the gpio inputs
     GPIO.setmode(GPIO.BCM)
     channel = 17
+    green_led = 27
+    red_led = 22
     GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(green_led, GPIO.OUT)
+    GPIO.setup(red_led, GPIO.OUT)
+    GPIO.output(green_led, GPIO.HIGH)
+    GPIO.output(red_led, GPIO.LOW)
 
     current_state = GPIO.input(channel)
 
@@ -81,6 +87,13 @@ def main_loop():
 
         sleep_interval = 60000
         cnow = datetime.now()
+
+    if pill_taken:
+        GPIO.output(green_led, GPIO.HIGH)
+        GPIO.output(red_led, GPIO.LOW)
+    else:
+        GPIO.output(green_led, GPIO.LOW)
+        GPIO.output(red_led, GPIO.HIGH)
 
         # get the current state
         cstate = GPIO.input(channel)

@@ -55,7 +55,6 @@ def main_loop():
     global debug_level
     global logfilename
 
-    debug_level = 3
     logfilename = 'pillbox-log.txt'
     pill_start_hour = 7
     pill_remind_hour = 10
@@ -135,6 +134,8 @@ def main_loop():
 
 
 def main(argv):
+    debug_level = 3
+    debug(8, 'pillbox started')
     send_email('pillbox started', 'pillbox is now running')
     main_loop()
 

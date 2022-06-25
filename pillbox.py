@@ -52,9 +52,6 @@ def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.c
 
 
 def main_loop():
-    global logfilename
-
-    logfilename = 'pillbox-log.txt'
     pill_start_hour = 7
     pill_remind_hour = 10
     last_pill_time = datetime.now()
@@ -134,7 +131,11 @@ def main_loop():
 
 def main(argv):
     global debug_level
+    global logfilename
+
     debug_level = 3
+    logfilename = 'pillbox-log.txt'
+
     debug(8, 'pillbox started')
     send_email('pillbox started', 'pillbox is now running')
     main_loop()

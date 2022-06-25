@@ -30,6 +30,8 @@ def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.c
     if 'PILL_PASSWORD' not in os.environ:
         raise ValueError('PILL_PASSWORD not found in environment variables')
 
+    pwd = os.environ['PILL_PASSWORD']
+
     FROM = user
     TO = recipient if type(recipient) is list else [recipient]
     SUBJECT = subject
@@ -37,18 +39,18 @@ def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.c
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s""" % (FROM, ", ".join(TO), SUBJECT, TEXT)
-    # try:
-    server = smtplib.SMTP(smtp_server, smtp_port)
-    server.ehlo()
-    server.starttls()
-    server.login(smtp_user, pwd)
-    server.sendmail(FROM, TO, message)
-    server.close()
-    debug(2, 'sent email: subject %s to %s' % (SUBJECT, TO))
-    return True
-    # except Exception as err:
-    #     debug(8, 'failed to send email: subject %s to %s. error %s' % (SUBJECT, TO, err))
-    #     return False
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.ehlo()
+        server.starttls()
+        server.login(smtp_user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        debug(2, 'sent email: subject %s to %s' % (SUBJECT, TO))
+        return True
+    except Exception as err:
+        debug(8, 'failed to send email: subject %s to %s. error %s' % (SUBJECT, TO, err))
+        return False
 
 
 def main_loop():

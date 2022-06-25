@@ -52,7 +52,6 @@ def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.c
 
 
 def main_loop():
-    global debug_level
     global logfilename
 
     logfilename = 'pillbox-log.txt'
@@ -134,6 +133,7 @@ def main_loop():
 
 
 def main(argv):
+    global debug_level
     debug_level = 3
     debug(8, 'pillbox started')
     send_email('pillbox started', 'pillbox is now running')

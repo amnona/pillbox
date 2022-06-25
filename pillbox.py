@@ -42,18 +42,18 @@ def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.c
     print(smtp_user)
     print(pwd)
     print(message)
-    # try:
-    server = smtplib.SMTP(smtp_server, smtp_port)
-    server.ehlo()
-    server.starttls()
-    server.login(smtp_user, pwd)
-    server.sendmail(FROM, TO, message)
-    server.close()
-    debug(2, 'sent email: subject %s to %s' % (SUBJECT, TO))
-    return True
-    # except Exception as err:
-    #     debug(8, 'failed to send email: subject %s to %s. error %s' % (SUBJECT, TO, err))
-    #     return False
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.ehlo()
+        server.starttls()
+        server.login(smtp_user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        debug(2, 'sent email: subject %s to %s' % (SUBJECT, TO))
+        return True
+    except Exception as err:
+        debug(8, 'failed to send email: subject %s to %s. error %s' % (SUBJECT, TO, err))
+        return False
 
 
 def main_loop():
@@ -139,7 +139,7 @@ def main(argv):
     global logfilename
 
     debug_level = 3
-    logfilename = 'pillbox-log.txt'
+    logfilename = '/home/pi/pillbox-log.txt'
 
     debug(8, 'pillbox started')
     send_email('pillbox started', 'pillbox is now running')

@@ -7,4 +7,4 @@ need to connect to pins: 1 (3.3v),9 (gnd),proximity switch 11 (gpio17),green led
 ## to prepare the raspberry pi:
 sudo nano /etc/rc.local
 export PILL_PASSWORD= ***SECRET PASSWORD***
-python /home/pi/git/pillbox/pillbox.py > /home/pi/pillbox.log &
+python /home/pi/git/pillbox/pillbox.py &

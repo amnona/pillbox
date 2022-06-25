@@ -22,32 +22,33 @@ def debug(level, msg, save_to_file=True):
             fl.write(cmsg + '\n')
 
 
-def send_mail(to, subj, body):
+def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.com'], user='pillbox@gmail.com', pwd=None, smtp_server='smtp-relay.sendinblue.com', smtp_port=587, smtp_user='sugaroops@yahoo.com'):
+    '''this is for the sendinblue smtp email server
+        for gmail use:
+        smtp_server='smtp.gmail.com'
+    '''
     if 'PILL_PASSWORD' not in os.environ:
         raise ValueError('PILL_PASSWORD not found in environment variables')
 
-    gmail_user = 'hasafsal.books@gmail.com'
-    gmail_password = os.environ['PILL_PASSWORD']
+    FROM = user
+    TO = recipient if type(recipient) is list else [recipient]
+    SUBJECT = subject
+    TEXT = body
 
-    sent_from = gmail_user
-    to = ['amnonim@gmail.com']
-    email_text = """\
-    From: %s
-    To: %s
-    Subject: %s
-
-    %s
-    """ % (sent_from, ", ".join(to), subj, body)
-
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s""" % (FROM, ", ".join(TO), SUBJECT, TEXT)
     try:
-        smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        smtp_server.ehlo()
-        smtp_server.login(gmail_user, gmail_password)
-        smtp_server.sendmail(sent_from, to, email_text)
-        smtp_server.close()
-        debug(3, "Email sent successfully!")
-    except Exception as ex:
-        debug(3, "Something went wrong: %s" % ex)
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.ehlo()
+        server.starttls()
+        server.login(smtp_user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        debug(2, 'sent email: subject %s to %s' % (SUBJECT, TO))
+        return True
+    except Exception as err:
+        debug(8, 'failed to send email: subject %s to %s. error %s' % (SUBJECT, TO, err))
+        return False
 
 
 def main_loop():
@@ -110,7 +111,7 @@ def main_loop():
                         reminder_sent = False
                         if not reminder_sent:
                             debug(7, 'oh no, still didnt take a pill, sending a reminder')
-                            send_mail(to=['amnonim@gmail.com', 'strudelit@gmail.com'], subj='Did you forget your medicine?', body='You need to take your medicine!!!!\nAmnon loves you moremoremoremoremore\n')
+                            send_email(to=['amnonim@gmail.com', 'strudelit@gmail.com'], subj='Did you forget your medicine?', body='You need to take your medicine!!!!\nAmnon loves you moremoremoremoremore\n')
                             reminder_sent = True
                             reminder_time = cnow
                         else:
@@ -134,8 +135,9 @@ def main_loop():
 
 
 def main(argv):
-        main_loop()
+    send_email('pillbox started', 'pillbox is now running')
+    main_loop()
 
 
 if __name__ == "__main__":
-        main(sys.argv[1:])
+    main(sys.argv[1:])

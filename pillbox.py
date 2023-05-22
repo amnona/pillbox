@@ -86,6 +86,7 @@ def main_loop():
         # wait for state change
         GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
 
+        # wait for one minute if nothing happens
         sleep_interval = 60000
         cnow = datetime.now()
 
@@ -98,6 +99,7 @@ def main_loop():
 
         # get the current state
         cstate = GPIO.input(channel)
+        # 1 is closed, 0 is open
         debug(3, 'current state: %s' % cstate)
         if cstate == current_state:
             debug(3, 'nothing changed')
@@ -120,17 +122,18 @@ def main_loop():
                             debug(3, 'still need to take pill but reminder already sent')
             continue
 
-        if cstate:
+        if cstate == 0:
             # box is opened - we are taking a pill
             debug(6, 'box opened (high)')
             pill_taken = True
             last_pill_time = cnow
             reminder_sent = False
         else:
-            # low
+            # box is closed
             debug(6, 'box closed')
+  
         # we need to wait a few ms to prevent edge events
-        time.sleep(0.3)
+        time.sleep(1)
         sleep_interval = 1000
 
         current_state = cstate

@@ -81,10 +81,15 @@ def main_loop():
     current_state = GPIO.input(channel)
 
     debug(7, 'pillbox started')
+    debug(7, 'input channel %s, red_led=%s, green_led=%s' % (channel, red_led, green_led))
 
     while (True):
         # wait for state change
-        GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
+        channel = GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
+        if channel is None:
+            debug(6, 'timeout')
+        else:
+            debug(6, 'state changed for channel %s' % channel)
 
         # wait for one minute if nothing happens
         sleep_interval = 60000
@@ -100,7 +105,7 @@ def main_loop():
         # get the current state
         cstate = GPIO.input(channel)
         # 1 is closed, 0 is open
-        debug(3, 'current state: %s' % cstate)
+        debug(6, 'current state: %s' % cstate)
         if cstate == current_state:
             debug(3, 'nothing changed')
             # nothing changed - it was a timeout
@@ -120,8 +125,10 @@ def main_loop():
                             reminder_time = cnow
                         else:
                             debug(3, 'still need to take pill but reminder already sent')
+            debug(6, 'continue. interval = %s' % sleep_interval)
             continue
 
+        debug('state changed!')
         if cstate == 0:
             # box is opened - we are taking a pill
             debug(6, 'box opened (high)')
@@ -133,10 +140,12 @@ def main_loop():
             debug(6, 'box closed')
   
         # we need to wait a few ms to prevent edge events
-        time.sleep(1)
+        time.sleep(100)
         sleep_interval = 1000
 
+        cstate = GPIO.input(channel)
         current_state = cstate
+        debug('new current_state: %s. Continuing' % current_state)
 
 
 def main(argv):

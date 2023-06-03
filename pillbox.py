@@ -85,11 +85,11 @@ def main_loop():
 
     while (True):
         # wait for state change
-        channel = GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
-        if channel is None:
+        reschannel = GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
+        if reschannel is None:
             debug(6, 'timeout')
         else:
-            debug(6, 'state changed for channel %s' % channel)
+            debug(6, 'state changed for channel %s' % reschannel)
 
         # wait for one minute if nothing happens
         sleep_interval = 60000

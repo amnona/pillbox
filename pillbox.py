@@ -128,7 +128,7 @@ def main_loop():
             debug(6, 'continue. interval = %s' % sleep_interval)
             continue
 
-        debug('state changed!')
+        debug(6,'state changed!')
         if cstate == 0:
             # box is opened - we are taking a pill
             debug(6, 'box opened (high)')
@@ -145,7 +145,7 @@ def main_loop():
 
         cstate = GPIO.input(channel)
         current_state = cstate
-        debug('new current_state: %s. Continuing' % current_state)
+        debug(6,'new current_state: %s. Continuing' % current_state)
 
 
 def main(argv):

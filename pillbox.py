@@ -84,6 +84,11 @@ def main_loop():
     debug(7, 'input channel %s, red_led=%s, green_led=%s' % (channel, red_led, green_led))
 
     while (True):
+        # get the current state
+        cstate = GPIO.input(channel)
+        # 1 is closed, 0 is open
+        debug(6, 'before sleep current state: %s' % cstate)
+
         # wait for state change
         reschannel = GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=sleep_interval)
         if reschannel is None:
@@ -106,6 +111,7 @@ def main_loop():
         cstate = GPIO.input(channel)
         # 1 is closed, 0 is open
         debug(6, 'current state: %s' % cstate)
+
         if cstate == current_state:
             debug(3, 'nothing changed')
             # nothing changed - it was a timeout

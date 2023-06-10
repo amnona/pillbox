@@ -20,6 +20,7 @@ def debug(level, msg, save_to_file=True):
     if save_to_file:
         with open(logfilename, 'a') as fl:
             fl.write(cmsg + '\n')
+            fl.flush()
 
 
 def send_email(subject, body, recipient=['amnonim@gmail.com', 'strudelit@gmail.com'], user='pillbox@gmail.com', pwd=None, smtp_server='smtp-relay.sendinblue.com', smtp_port=587, smtp_user='sugaroops@yahoo.com'):

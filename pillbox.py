@@ -155,8 +155,10 @@ def main_loop():
         # we need to wait a few ms to prevent edge events
         time.sleep(250)
         sleep_interval = 1000
+        debug(6,'wake from 250ms sleep')
 
         cstate = GPIO.input(channel)
+        debug(6,' got state %s' % cstate)
         current_state = cstate
         debug(6,'new current_state: %s. Continuing' % current_state)
 

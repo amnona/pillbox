@@ -147,12 +147,15 @@ def main_loop():
             # box is opened - we are taking a pill
             debug(6, 'box opened (high)')
             pill_taken = True
+            cnow = datetime.now()
             last_pill_time = cnow
             reminder_sent = False
+            debug(6, 'ok moving on')
         else:
             # box is closed
             debug(6, 'box closed')
   
+        debug(6,'going to sleep')
         # we need to wait a few ms to prevent edge events
         time.sleep(250)
         sleep_interval = 1000

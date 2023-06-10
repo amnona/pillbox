@@ -157,7 +157,7 @@ def main_loop():
   
         debug(6,'going to sleep')
         # we need to wait a few ms to prevent edge events
-        time.sleep(250)
+        time.sleep(0.25)
         sleep_interval = 1000
         debug(6,'wake from 250ms sleep')
 

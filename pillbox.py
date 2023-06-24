@@ -90,6 +90,7 @@ def main_loop():
     debug(7, 'input channel %s, red_led=%s, green_led=%s' % (channel, red_led, green_led))
 
     while (True):
+        GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         # get the current state
         cstate = GPIO.input(channel)
         # when box is closed, disconnected. when box is open, connect (short circuit)

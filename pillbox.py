@@ -72,7 +72,7 @@ def main_loop():
     GPIO.setmode(GPIO.BCM)
 
     # the open/closed sensor input pin
-    channel = 17
+    channel = 6
     
     # the reporting led output pins
     green_led = 27

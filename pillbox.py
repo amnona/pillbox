@@ -72,13 +72,14 @@ def main_loop():
     GPIO.setmode(GPIO.BCM)
 
     # the open/closed sensor input pin
-    channel = 6
+    # we use pull up, so when the box is closed, the input is 1 and connect the switch to ground
+    channel = 17
     
     # the reporting led output pins
     green_led = 27
     red_led = 22
     
-    GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(green_led, GPIO.OUT)
     GPIO.setup(red_led, GPIO.OUT)
     GPIO.output(green_led, GPIO.HIGH)
@@ -90,12 +91,12 @@ def main_loop():
     debug(7, 'input channel %s, red_led=%s, green_led=%s' % (channel, red_led, green_led))
 
     while (True):
-        GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        # GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         # get the current state
         cstate = GPIO.input(channel)
         # when box is closed, disconnected. when box is open, connect (short circuit)
-        # we connect the gpio to the 3.3v pin when short circuit (box is open)
-        # so 0 is closed, 1 is open
+        # we connect the gpio to the gnd pin when short circuit (box is open)
+        # so 1 is closed, 0 is open
         debug(6, 'before sleep current state: %s' % cstate)
 
         # wait for state change
@@ -144,7 +145,7 @@ def main_loop():
             continue
 
         debug(6,'state changed!')
-        if cstate == 1:
+        if cstate == 0:
             # box is opened - we are taking a pill
             debug(6, 'box opened (high)')
             pill_taken = True

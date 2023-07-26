@@ -91,6 +91,7 @@ def main_loop():
     debug(7, 'input channel %s, red_led=%s, green_led=%s' % (channel, red_led, green_led))
 
     while (True):
+        time.sleep(0.1)
         cstate = GPIO.input(channel)
         debug(6, 'before sleep current state: %s' % cstate)
         reschannel = GPIO.wait_for_edge(channel, GPIO.BOTH, timeout=1000)
